@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
  */
 
 @RestController
-@RequestMapping("/constuctors")
+@RequestMapping("/constructors")
 public class ConstructorsController {
 
     @Autowired
@@ -31,7 +31,7 @@ public class ConstructorsController {
     public ResponseEntity updateConstructorsStandings(@PathVariable("constructorTitle") String constructorTitle, @RequestBody String constructorsData) {
         try {
             constructorsStandingServiceImpl.updateStandingsWithData(constructorTitle, constructorsData);
-            return new ResponseEntity(HttpStatus.ACCEPTED);
+            return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity("Update of standing wasn't possible", HttpStatus.INTERNAL_SERVER_ERROR);
         }
