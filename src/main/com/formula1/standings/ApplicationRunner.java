@@ -1,4 +1,4 @@
-package com.formula1.standings.entities;
+package com.formula1.standings;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
