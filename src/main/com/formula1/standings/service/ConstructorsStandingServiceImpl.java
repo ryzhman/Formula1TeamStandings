@@ -27,8 +27,7 @@ public class ConstructorsStandingServiceImpl implements ConstructorsStandingServ
 
     @Override
     public String getStandings() throws JsonProcessingException {
-        StringBuilder result = new StringBuilder();
-        Set<String> allKeys = redisTemplate.keys(RedisConstants.STANDINGS + RedisConstants.REDIS_DELIMETER + RedisConstants.CONSTRUCTS + RedisConstants.REDIS_DELIMETER + "*");
+        Set<String> allKeys = redisTemplate.keys(RedisConstants.STANDINGS + RedisConstants.REDIS_SEPARATOR + RedisConstants.CONSTRUCTORS + RedisConstants.REDIS_SEPARATOR + "*");
         List<Object> fetchedData = redisTemplate.executePipelined((RedisCallback<?>) connection -> {
             Iterator iter = allKeys.iterator();
             while (iter.hasNext()) {
@@ -42,7 +41,7 @@ public class ConstructorsStandingServiceImpl implements ConstructorsStandingServ
 
     @Override
     public Constructor getConstructorByTitle(String title) throws IOException {
-        String fetchedData = redisTemplate.opsForValue().get(RedisConstants.STANDINGS + RedisConstants.REDIS_DELIMETER + RedisConstants.CONSTRUCTS + RedisConstants.REDIS_DELIMETER + title);
+        String fetchedData = redisTemplate.opsForValue().get(RedisConstants.STANDINGS + RedisConstants.REDIS_SEPARATOR + RedisConstants.CONSTRUCTORS + RedisConstants.REDIS_SEPARATOR + title);
         if (fetchedData == null) {
             return null;
         }
@@ -55,12 +54,12 @@ public class ConstructorsStandingServiceImpl implements ConstructorsStandingServ
         Constructor entity = getConstructorByTitle(constructorId);
         if (entity != null) {
             String node = mapper.writeValueAsString(entity);
-            redisTemplate.opsForValue().set(RedisConstants.STANDINGS + RedisConstants.REDIS_DELIMETER + RedisConstants.CONSTRUCTS + RedisConstants.REDIS_DELIMETER + entity.getTitle(),
+            redisTemplate.opsForValue().set(RedisConstants.STANDINGS + RedisConstants.REDIS_SEPARATOR + RedisConstants.CONSTRUCTORS + RedisConstants.REDIS_SEPARATOR + entity.getTitle(),
                     node);
         } else {
             entity = new Constructor(constructorId);
             JsonNode node = mapper.readTree(constructorsData);
-            redisTemplate.opsForValue().set(RedisConstants.STANDINGS + RedisConstants.REDIS_DELIMETER + RedisConstants.CONSTRUCTS + RedisConstants.REDIS_DELIMETER + entity.getTitle(),
+            redisTemplate.opsForValue().set(RedisConstants.STANDINGS + RedisConstants.REDIS_SEPARATOR + RedisConstants.CONSTRUCTORS + RedisConstants.REDIS_SEPARATOR + entity.getTitle(),
                     node.toString());
         }
     }

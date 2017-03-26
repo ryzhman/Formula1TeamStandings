@@ -5,9 +5,9 @@ package com.formula1.standings.utils;
  */
 public interface RedisConstants {
 
-    public static String REDIS_DELIMETER = ":";
+    public static String REDIS_SEPARATOR = ":";
     public static String STANDINGS = "STANDINGS";
-    public static String CONSTRUCTS = "CONSTRUCTORS";
+    public static String CONSTRUCTORS = "CONSTRUCTORS";
     public static String DRIVERS = "DRIVERS";
 
 }
