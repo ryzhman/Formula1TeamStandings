@@ -18,8 +18,6 @@ public class Constructor {
     public Constructor() {
     }
 
-    ;
-
     public String getId() {
         return id;
     }

@@ -2,9 +2,6 @@ package com.formula1.standings.entity;
 
 import com.formula1.standings.utils.CountryUtil;
 
-import javax.persistence.OneToMany;
-import java.util.Locale;
-
 /**
  * Created by Oleksandr Ryzhkov on 25.03.2017.
  */
@@ -18,7 +15,7 @@ public class Driver {
 
     public Driver(String name, String nationality, String teamTitle) {
         this.name = name;
-        this.nationality = nationality;
+        this.nationality = CountryUtil.getCountry(nationality);
         this.teamTitle = teamTitle;
         this.points = 0;
         this.wins = 0;

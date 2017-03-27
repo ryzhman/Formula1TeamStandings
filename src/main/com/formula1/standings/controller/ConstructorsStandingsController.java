@@ -1,6 +1,7 @@
 package com.formula1.standings.controller;
 
 import com.formula1.standings.service.ConstructorsStandingService;
+import com.formula1.standings.utils.RedisConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,28 +13,36 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/constructors")
-public class ConstructorsController {
+public class ConstructorsStandingsController {
 
     @Autowired
-    private ConstructorsStandingService constructorsStandingServiceImpl;
+    private ConstructorsStandingService constructorsStandingService;
 
+    /**
+     * Method returns the current list of F1 constructors standings
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/standings")
     public ResponseEntity getConstructorsStanding() {
         try {
-            String result = constructorsStandingServiceImpl.getStandings();
+            String result = constructorsStandingService.getStandings(RedisConstants.CONSTRUCTORS);
             return new ResponseEntity(result, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity("Unexpected error occured while getting standing data", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity("Unexpected error occured while getting standing data: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    /**
+     * Method updates standing of a particular constructor which title is passed as a path variable.
+     * Data to update must be included in request body.
+     * The passed JSON may include next property: points
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/constructor/{constructorTitle}")
     public ResponseEntity updateConstructorsStandings(@PathVariable("constructorTitle") String constructorTitle, @RequestBody String constructorsData) {
         try {
-            constructorsStandingServiceImpl.updateStandingsWithData(constructorTitle, constructorsData);
+            constructorsStandingService.updateStandingsWithData(constructorTitle, constructorsData);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity("Update of standing wasn't possible", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity("Update of standing wasn't possible: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

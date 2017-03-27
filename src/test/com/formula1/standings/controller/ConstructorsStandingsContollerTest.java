@@ -1,8 +1,8 @@
 package formula1.standings.controller;
 
-import com.formula1.standings.controller.ConstructorsController;
+import com.formula1.standings.controller.ConstructorsStandingsController;
 import com.formula1.standings.service.ConstructorsStandingService;
-import com.formula1.standings.service.ConstructorsStandingServiceImpl;
+import com.formula1.standings.utils.RedisConstants;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -20,12 +20,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Created by Oleksandr Ryzhkov on 26.03.2017.
  */
-public class ConstructorsContollerTest {
+public class ConstructorsStandingsContollerTest {
     private MockMvc mockMvc;
     @Mock
-    private ConstructorsStandingServiceImpl mockService;
+    private ConstructorsStandingService mockService;
     @InjectMocks
-    private ConstructorsController controller;
+    private ConstructorsStandingsController controller;
 
     @Before
     public void setup() {
@@ -35,22 +35,22 @@ public class ConstructorsContollerTest {
 
     @Test
     public void getConstructorsStandingTest() throws Exception {
-        when(mockService.getStandings()).thenReturn("\"test key\":\"test value\"");
+        when(mockService.getStandings(RedisConstants.CONSTRUCTORS)).thenReturn("\"test key\":\"test value\"");
 
         mockMvc.perform(get("/constructors/standings"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("\"test key\":\"test value\""));
 
-        verify(mockService, times(1)).getStandings();
+        verify(mockService, times(1)).getStandings(RedisConstants.CONSTRUCTORS);
     }
 
     @Test
     public void getConstructorsStandingFailTest() throws Exception {
-        when(mockService.getStandings()).thenThrow(new RuntimeException("Method invocation failed"));
+        when(mockService.getStandings(RedisConstants.CONSTRUCTORS)).thenThrow(new RuntimeException("Method invocation failed"));
         mockMvc.perform(get("/constructors/standings"))
                 .andExpect(status().isInternalServerError())
-                .andExpect(content().string("Unexpected error occured while getting standing data"));
-        verify(mockService, times(1)).getStandings();
+                .andExpect(content().string("Unexpected error occured while getting standing data: Method invocation failed"));
+        verify(mockService, times(1)).getStandings(RedisConstants.CONSTRUCTORS);
     }
 
     @Test
