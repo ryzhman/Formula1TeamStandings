@@ -1,4 +1,5 @@
-![Image of Yaktocat]https://travis-ci.org/ryzhman/Formula1TeamStandings.svg?branch=master
+[![TravisCI](https://travis-ci.org/ryzhman/Formula1TeamStandings.svg?branch=master)](https://travis-ci.org/ryzhman/Formula1TeamStandings.svg?branch=master)
+
 
 ## Samples of requests ##
 ### To add new data for a particular constructor or create a new one you should create a POST request with next configurations ### 
