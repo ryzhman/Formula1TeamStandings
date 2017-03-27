@@ -20,6 +20,26 @@ URL
 localhost:8080/constructors/standings
 ```
 
+## To add multiple constructors you can create a POST method ###
+URL
+```
+```
+Request Body
+```
+[{
+"title": "WILLIAMS",
+"points": 93
+},
+{
+"title": "MacLaren",
+"points": 103
+},
+{
+"title": "Ferrari",
+"points": 102
+}]
+```
+
 ### To add new data for a particular driver or create a new one you should create a POST request with next configurations ### 
 URL
 ```
@@ -34,6 +54,29 @@ Request Body
 	"points": 123,
 	"wins": 10
 }
+```
+
+## To add multiple drivers you can create a POST method ###
+URL
+```
+localhost:8080/drivers/driver
+```
+Request Body
+```
+[{
+	"name": "Sebastian Vettel",
+	"nationality": "Germany",
+	"teamTitle": "Ferrari",
+	"points": 123,
+	"wins": 10
+},
+{
+	"name": "Lewis Hamilton",
+	"nationality": "UK",
+	"teamTitle": "Mercedes",
+	"points": 122,
+	"wins": 8
+}]
 ```
 
 

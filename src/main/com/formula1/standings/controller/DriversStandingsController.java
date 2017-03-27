@@ -46,4 +46,20 @@ public class DriversStandingsController {
             return new ResponseEntity("Update of standing wasn't possible: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * Method updates standing of a particular driver whose name is passed as a path variable.
+     * Data to update must be included in request body.
+     * The passed JSON *MUST* include next properties: nationality, teamTitle.
+     * Additional data for wins and points may be included.
+     * */
+    @RequestMapping(method = RequestMethod.POST, value = "/driver")
+    public ResponseEntity updateDriverStanding(@RequestBody String driverData) {
+        try {
+            driversStandingsService.updateStandingsWithData(driverData);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity("Update of standing wasn't possible: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

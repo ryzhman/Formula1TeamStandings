@@ -45,4 +45,19 @@ public class ConstructorsStandingsController {
             return new ResponseEntity("Update of standing wasn't possible: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * Method updates standing of a particular constructor which title is passed as a path variable.
+     * Data to update must be included in request body.
+     * The passed JSON may include next property: points
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/constructor")
+    public ResponseEntity uploadConstructorsStandings(@RequestBody String constructorsData) {
+        try {
+            constructorsStandingService.updateStandingsWithData(constructorsData);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity("Update of standing wasn't possible: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
