@@ -23,6 +23,8 @@ localhost:8080/constructors/standings
 ## To add multiple constructors you can create a POST method ###
 URL
 ```
+localhost:8080/constructors/constructor
+
 ```
 Request Body
 ```
