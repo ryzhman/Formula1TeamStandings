@@ -1,3 +1,4 @@
+[![TravisCI](https://travis-ci.org/ryzhman/Formula1TeamStandings.svg?branch=master)](https://travis-ci.org/ryzhman/Formula1TeamStandings.svg?branch=master)
 
 
 ## Samples of requests ##
