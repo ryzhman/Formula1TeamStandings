@@ -2,7 +2,9 @@ package com.formula1.standings.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.formula1.standings.utils.RedisConstants;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -20,7 +22,7 @@ public abstract class AbstractStandingsService {
     @Autowired
     protected StringRedisTemplate redisTemplate;
 
-    public String getStandings(String dataType) throws JsonProcessingException {
+    public JSONObject getStandings(String dataType) throws JsonProcessingException {
         String type = dataType.toUpperCase();
         if(type != RedisConstants.DRIVERS && type != RedisConstants.CONSTRUCTORS){
             throw new IllegalArgumentException("Incorrect key for DB was passed");
@@ -34,6 +36,6 @@ public abstract class AbstractStandingsService {
             }
             return null;
         });
-        return mapper.writeValueAsString(fetchedData);
+        return new JSONObject(fetchedData);
     }
 }

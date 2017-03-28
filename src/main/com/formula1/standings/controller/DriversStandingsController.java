@@ -1,7 +1,9 @@
 package com.formula1.standings.controller;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.formula1.standings.service.DriversStandingsService;
 import com.formula1.standings.utils.RedisConstants;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +25,7 @@ public class DriversStandingsController {
     @RequestMapping(method = RequestMethod.GET, value = "/standings")
     public ResponseEntity getStandings() {
         try {
-            String result = driversStandingsService.getStandings(RedisConstants.DRIVERS);
+            JSONObject result = driversStandingsService.getStandings(RedisConstants.DRIVERS);
             return ResponseEntity.ok()
                     .body(result);
         } catch (Exception e) {
