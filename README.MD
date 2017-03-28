@@ -1,4 +1,4 @@
-[![TravisCI](https://travis-ci.org/ryzhman/Formula1TeamStandings.svg?branch=master)](https://travis-ci.org/ryzhman/Formula1TeamStandings.svg?branch=master)
+[![Build Status](https://travis-ci.org/ryzhman/Formula1TeamStandings.svg?branch=master)](https://travis-ci.org/ryzhman/Formula1TeamStandings)
 
 ## Run application ##
 To run a REST service you should start Redis server locally. You can download it from official Redis webpage ([Linux](https://redis.io/download) | [Windows](https://github.com/MSOpenTech/redis/releases))
