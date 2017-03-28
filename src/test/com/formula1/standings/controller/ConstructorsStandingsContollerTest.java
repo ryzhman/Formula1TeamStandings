@@ -81,4 +81,25 @@ public class ConstructorsStandingsContollerTest {
 
         verify(mockService, times(1)).updateStandingsWithData("testConstructor", "\"test key\":\"test value\"");
     }
+
+    @Test
+    public void uploadConstructorsStandingsTest() throws Exception {
+        mockMvc.perform(post("/constructors/constructor")
+                .content("\"test key\":\"test value\""))
+                .andExpect(status().isOk());
+
+        verify(mockService, times(1)).updateStandingsWithData("\"test key\":\"test value\"");
+    }
+
+    @Test
+    public void uploadConstructorsStandingsExceptionTest() throws Exception {
+        doThrow(new RuntimeException("test exception")).when(mockService).updateStandingsWithData("\"test key\":\"test value\"");
+
+        mockMvc.perform(post("/constructors/constructor")
+                .content("\"test key\":\"test value\""))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string("Update of standing wasn't possible: test exception"));
+
+        verify(mockService, times(1)).updateStandingsWithData("\"test key\":\"test value\"");
+    }
 }
