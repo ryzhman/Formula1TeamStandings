@@ -1,9 +1,7 @@
-package formula1.standings.controller;
+package com.formula1.standings.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.formula1.standings.controller.ConstructorsStandingsController;
-import com.formula1.standings.service.ConstructorsStandingService;
+import com.formula1.standings.service.ConstructorsStandingServiceImpl;
 import com.formula1.standings.utils.RedisConstants;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -27,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ConstructorsStandingsContollerTest {
     private MockMvc mockMvc;
     @Mock
-    private ConstructorsStandingService mockService;
+    private ConstructorsStandingServiceImpl mockService;
     @InjectMocks
     private ConstructorsStandingsController controller;
 

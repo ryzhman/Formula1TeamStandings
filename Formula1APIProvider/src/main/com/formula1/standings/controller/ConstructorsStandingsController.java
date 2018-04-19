@@ -1,6 +1,6 @@
 package com.formula1.standings.controller;
 
-import com.formula1.standings.service.ConstructorStandingService;
+import com.formula1.standings.service.ConstructorsStandingServiceImpl;
 import com.formula1.standings.utils.RedisConstants;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class ConstructorsStandingsController {
 
     @Autowired
-    private ConstructorStandingService constructorStandingService;
+    private ConstructorsStandingServiceImpl constructorStandingService;
 
     /**
      * Method returns the current list of F1 constructors standings

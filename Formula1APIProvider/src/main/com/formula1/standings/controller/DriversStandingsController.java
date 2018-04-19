@@ -1,7 +1,6 @@
 package com.formula1.standings.controller;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import com.formula1.standings.service.DriversStandingsService;
+import com.formula1.standings.service.DriversStandingsServiceImpl;
 import com.formula1.standings.utils.RedisConstants;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class DriversStandingsController {
 
     @Autowired
-    private DriversStandingsService driversStandingsService;
+    private DriversStandingsServiceImpl driversStandingsServiceImpl;
 
     /**
      * Method returns the current list of F1 drivers standings
@@ -25,7 +24,7 @@ public class DriversStandingsController {
     @RequestMapping(method = RequestMethod.GET, value = "/standings")
     public ResponseEntity getStandings() {
         try {
-            JSONObject result = driversStandingsService.getStandings(RedisConstants.DRIVERS);
+            JSONObject result = driversStandingsServiceImpl.getStandings(RedisConstants.DRIVERS);
             return ResponseEntity.ok()
                     .body(result);
         } catch (Exception e) {
@@ -42,7 +41,7 @@ public class DriversStandingsController {
     @RequestMapping(method = RequestMethod.POST, value = "/driver/{driverName}")
     public ResponseEntity updateDriverStanding(@PathVariable("driverName") String driverName, @RequestBody String driverData) {
         try {
-            driversStandingsService.updateStandingsWithData(driverName, driverData);
+            driversStandingsServiceImpl.updateStandingsWithData(driverName, driverData);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity("Update of standing wasn't possible: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -58,7 +57,7 @@ public class DriversStandingsController {
     @RequestMapping(method = RequestMethod.POST, value = "/driver")
     public ResponseEntity updateDriverStanding(@RequestBody String driverData) {
         try {
-            driversStandingsService.updateStandingsWithData(driverData);
+            driversStandingsServiceImpl.updateStandingsWithData(driverData);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity("Update of standing wasn't possible: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

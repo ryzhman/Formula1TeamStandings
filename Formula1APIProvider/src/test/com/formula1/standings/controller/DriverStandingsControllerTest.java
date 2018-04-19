@@ -1,7 +1,7 @@
-package formula1.standings.controller;
+package com.formula1.standings.controller;
 
 import com.formula1.standings.controller.DriversStandingsController;
-import com.formula1.standings.service.DriversStandingsService;
+import com.formula1.standings.service.DriversStandingsServiceImpl;
 import com.formula1.standings.utils.RedisConstants;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class DriverStandingsControllerTest {
     private MockMvc mockMvc;
     @Mock
-    private DriversStandingsService mockService;
+    private DriversStandingsServiceImpl mockService;
     @InjectMocks
     private DriversStandingsController controller;
 
