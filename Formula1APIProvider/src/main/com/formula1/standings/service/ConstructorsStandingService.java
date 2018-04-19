@@ -4,8 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.formula1.standings.dataConverters.ConstructorConverter;
 import com.formula1.standings.entity.Constructor;
+import com.formula1.standings.repository.ConstructorRepository;
 import com.formula1.standings.utils.DataValidator;
-import com.formula1.standings.utils.RedisConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -16,15 +17,14 @@ import java.util.List;
  */
 @Service
 public class ConstructorsStandingService extends AbstractStandingsService {
+    @Autowired
+    private ConstructorRepository constructorRepository;
+
     /**
      * Method return an entity found in Redis
      */
-    public Constructor getConstructorByTitle(String title) throws IOException {
-        String fetchedData = redisTemplate.opsForValue().get(RedisConstants.STANDINGS + RedisConstants.REDIS_SEPARATOR + RedisConstants.CONSTRUCTORS + RedisConstants.REDIS_SEPARATOR + title);
-        if (fetchedData == null) {
-            return null;
-        }
-        return ConstructorConverter.convertToEntity(fetchedData);
+    public Constructor getByTitle(String title) throws IOException {
+        return constructorRepository.getConstructorByTitle(title);
     }
 
     /**
@@ -38,17 +38,19 @@ public class ConstructorsStandingService extends AbstractStandingsService {
 
         DataValidator.validateConstructorData(json);
 
-        Constructor entity = getConstructorByTitle(constructorId);
+        Constructor entity = getByTitle(constructorId);
         if (entity != null) {
             entity.setPoints(Integer.parseInt(json.get("points").toString()));
-            redisTemplate.opsForValue().set(RedisConstants.STANDINGS + RedisConstants.REDIS_SEPARATOR + RedisConstants.CONSTRUCTORS + RedisConstants.REDIS_SEPARATOR + entity.getTitle(),
-                    ConstructorConverter.convertToString(entity));
+            constructorRepository.saveOrUpdate(entity);
         } else {
             entity = new Constructor(constructorId);
             entity.setPoints(Integer.parseInt(json.get("points").toString()));
-            redisTemplate.opsForValue().set(RedisConstants.STANDINGS + RedisConstants.REDIS_SEPARATOR + RedisConstants.CONSTRUCTORS + RedisConstants.REDIS_SEPARATOR + entity.getTitle(),
-                    ConstructorConverter.convertToString(entity));
+            constructorRepository.saveOrUpdate(entity);
         }
+    }
+
+    public void update(Constructor constructor) {
+        constructorRepository.saveOrUpdate(constructor);
     }
 
     /**
@@ -58,24 +60,6 @@ public class ConstructorsStandingService extends AbstractStandingsService {
      */
     public void updateStandingsWithData(String constructorsData) throws IOException {
         List<Constructor> constructorList = ConstructorConverter.convertToEntities(constructorsData);
-
-        constructorList.stream()
-                .forEach(constructor -> {
-                    try {
-                        Constructor entity = getConstructorByTitle(constructor.getTitle());
-                        if (entity != null) {
-                            entity.setPoints(constructor.getPoints());
-                            redisTemplate.opsForValue().set(RedisConstants.STANDINGS + RedisConstants.REDIS_SEPARATOR + RedisConstants.CONSTRUCTORS + RedisConstants.REDIS_SEPARATOR + entity.getTitle(),
-                                    ConstructorConverter.convertToString(entity));
-                        } else {
-                            entity = new Constructor(constructor.getTitle());
-                            entity.setPoints(constructor.getPoints());
-                            redisTemplate.opsForValue().set(RedisConstants.STANDINGS + RedisConstants.REDIS_SEPARATOR + RedisConstants.CONSTRUCTORS + RedisConstants.REDIS_SEPARATOR + entity.getTitle(),
-                                    ConstructorConverter.convertToString(entity));
-                        }
-                    } catch (IOException e) {
-                        System.out.println("Exception occurred: " + e.getMessage());
-                    }
-                });
+        constructorList.forEach(constructor -> constructorRepository.saveOrUpdate(constructor));
     }
 }
