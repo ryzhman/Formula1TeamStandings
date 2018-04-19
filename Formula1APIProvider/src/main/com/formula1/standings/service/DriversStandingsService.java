@@ -1,6 +1,8 @@
 package com.formula1.standings.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.formula1.standings.dataConverters.DriverConverter;
 import com.formula1.standings.entity.Driver;
 import com.formula1.standings.utils.DataValidator;
 import com.formula1.standings.utils.RedisConstants;
@@ -24,8 +26,7 @@ public class DriversStandingsService extends AbstractStandingsService {
         if (fetchedData == null) {
             return null;
         }
-        Driver entity = mapper.readValue(fetchedData, Driver.class);
-        return entity;
+        return DriverConverter.convertToDriver(fetchedData);
     }
 
     /**
@@ -34,6 +35,7 @@ public class DriversStandingsService extends AbstractStandingsService {
      * Initially, whether driver already exists is conducted. If yes entity is updated, otherwise - persisted from scratch.
      */
     public void updateStandingsWithData(String driverName, String driverData) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
         JsonNode json = mapper.readTree(driverData);
 
         DataValidator.validateDriverData(json);
@@ -46,13 +48,13 @@ public class DriversStandingsService extends AbstractStandingsService {
             entity.setWins(Integer.parseInt(json.get("wins").toString()));
 
             redisTemplate.opsForValue().set(RedisConstants.STANDINGS + RedisConstants.REDIS_SEPARATOR + RedisConstants.DRIVERS + RedisConstants.REDIS_SEPARATOR + entity.getName(),
-                    mapper.writeValueAsString(entity));
+                    DriverConverter.convertToString(entity));
         } else {
             entity = new Driver(driverName, json.get("nationality").toString(), json.get("teamTitle").toString());
             entity.setPoints(Integer.parseInt(json.get("points").toString()));
             entity.setWins(Integer.parseInt(json.get("wins").toString()));
             redisTemplate.opsForValue().set(RedisConstants.STANDINGS + RedisConstants.REDIS_SEPARATOR + RedisConstants.DRIVERS + RedisConstants.REDIS_SEPARATOR + entity.getName(),
-                    mapper.writeValueAsString(entity));
+                    DriverConverter.convertToString(entity));
         }
     }
 
@@ -62,6 +64,7 @@ public class DriversStandingsService extends AbstractStandingsService {
      * Initially, whether driver already exists is conducted. If yes entity is updated, otherwise - persisted from scratch.
      */
     public void updateStandingsWithData(String driverData) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
         JSONArray json = new JSONArray(driverData);
 
         DataValidator.validateDriversData(json);
@@ -78,13 +81,13 @@ public class DriversStandingsService extends AbstractStandingsService {
                             entity.setWins(driver.getWins());
 
                             redisTemplate.opsForValue().set(RedisConstants.STANDINGS + RedisConstants.REDIS_SEPARATOR + RedisConstants.DRIVERS + RedisConstants.REDIS_SEPARATOR + entity.getName(),
-                                    mapper.writeValueAsString(entity));
+                                    DriverConverter.convertToString(entity));
                         } else {
                             entity = new Driver(driver.getName(), driver.getNationality(), driver.getTeamTitle());
                             entity.setPoints(driver.getPoints());
                             entity.setWins(driver.getWins());
                             redisTemplate.opsForValue().set(RedisConstants.STANDINGS + RedisConstants.REDIS_SEPARATOR + RedisConstants.DRIVERS + RedisConstants.REDIS_SEPARATOR + entity.getName(),
-                                    mapper.writeValueAsString(entity));
+                                    DriverConverter.convertToString(entity));
                         }
                     } catch (IOException e) {
                         System.out.println("Exception occured: " + e.getMessage());

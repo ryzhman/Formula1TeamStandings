@@ -1,10 +1,11 @@
 package com.formula1.standings.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.formula1.standings.dataConverters.ConstructorConverter;
 import com.formula1.standings.entity.Constructor;
 import com.formula1.standings.utils.DataValidator;
 import com.formula1.standings.utils.RedisConstants;
-import org.json.JSONArray;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -15,7 +16,6 @@ import java.util.List;
  */
 @Service
 public class ConstructorsStandingService extends AbstractStandingsService {
-
     /**
      * Method return an entity found in Redis
      */
@@ -24,8 +24,7 @@ public class ConstructorsStandingService extends AbstractStandingsService {
         if (fetchedData == null) {
             return null;
         }
-        Constructor entity = mapper.readValue(fetchedData, Constructor.class);
-        return entity;
+        return ConstructorConverter.convertToEntity(fetchedData);
     }
 
     /**
@@ -34,6 +33,7 @@ public class ConstructorsStandingService extends AbstractStandingsService {
      * Initially, whether constructor already exists is conducted. If yes entity is updated, otherwise - persisted from scratch.
      */
     public void updateStandingsWithData(String constructorId, String constructorsData) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
         JsonNode json = mapper.readTree(constructorsData);
 
         DataValidator.validateConstructorData(json);
@@ -42,12 +42,12 @@ public class ConstructorsStandingService extends AbstractStandingsService {
         if (entity != null) {
             entity.setPoints(Integer.parseInt(json.get("points").toString()));
             redisTemplate.opsForValue().set(RedisConstants.STANDINGS + RedisConstants.REDIS_SEPARATOR + RedisConstants.CONSTRUCTORS + RedisConstants.REDIS_SEPARATOR + entity.getTitle(),
-                    mapper.writeValueAsString(entity));
+                    ConstructorConverter.convertToString(entity));
         } else {
             entity = new Constructor(constructorId);
             entity.setPoints(Integer.parseInt(json.get("points").toString()));
             redisTemplate.opsForValue().set(RedisConstants.STANDINGS + RedisConstants.REDIS_SEPARATOR + RedisConstants.CONSTRUCTORS + RedisConstants.REDIS_SEPARATOR + entity.getTitle(),
-                    mapper.writeValueAsString(entity));
+                    ConstructorConverter.convertToString(entity));
         }
     }
 
@@ -57,27 +57,24 @@ public class ConstructorsStandingService extends AbstractStandingsService {
      * Initially, whether constructor already exists is conducted. If yes entity is updated, otherwise - persisted from scratch.
      */
     public void updateStandingsWithData(String constructorsData) throws IOException {
-        JSONArray json = new JSONArray(constructorsData);
+        List<Constructor> constructorList = ConstructorConverter.convertToEntities(constructorsData);
 
-        DataValidator.validateConstructorsData(json);
-
-        List<Constructor> construtorList = mapper.readValue(constructorsData, mapper.getTypeFactory().constructCollectionType(List.class, Constructor.class));
-        construtorList.stream()
+        constructorList.stream()
                 .forEach(constructor -> {
                     try {
                         Constructor entity = getConstructorByTitle(constructor.getTitle());
                         if (entity != null) {
                             entity.setPoints(constructor.getPoints());
                             redisTemplate.opsForValue().set(RedisConstants.STANDINGS + RedisConstants.REDIS_SEPARATOR + RedisConstants.CONSTRUCTORS + RedisConstants.REDIS_SEPARATOR + entity.getTitle(),
-                                    mapper.writeValueAsString(entity));
+                                    ConstructorConverter.convertToString(entity));
                         } else {
                             entity = new Constructor(constructor.getTitle());
                             entity.setPoints(constructor.getPoints());
                             redisTemplate.opsForValue().set(RedisConstants.STANDINGS + RedisConstants.REDIS_SEPARATOR + RedisConstants.CONSTRUCTORS + RedisConstants.REDIS_SEPARATOR + entity.getTitle(),
-                                    mapper.writeValueAsString(entity));
+                                    ConstructorConverter.convertToString(entity));
                         }
                     } catch (IOException e) {
-                        System.out.println("Exception occured: " + e.getMessage());
+                        System.out.println("Exception occurred: " + e.getMessage());
                     }
                 });
     }

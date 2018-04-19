@@ -17,12 +17,10 @@ import java.util.Set;
  * Created by Oleksandr Ryzhkov on 27.03.2017.
  */
 public abstract class AbstractStandingsService {
-    protected ObjectMapper mapper = new ObjectMapper();
-
     @Autowired
     protected StringRedisTemplate redisTemplate;
 
-    public JSONObject getStandings(String dataType) throws JsonProcessingException {
+    public JSONObject getStandings(String dataType) {
         String type = dataType.toUpperCase();
         if(type != RedisConstants.DRIVERS && type != RedisConstants.CONSTRUCTORS){
             throw new IllegalArgumentException("Incorrect key for DB was passed");
