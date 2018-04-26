@@ -2,7 +2,7 @@
 
 ## Run application ##
 To run REST service you need to launch main class. Redis server goes with the code, so you don't need to install in manually. 
-
+(Unfortunately, my lapton doesn't support Hypervision and Virtualization, thus, implementation of Docker was not possible)
 ## Samples of requests ##
 ### To add new data for a particular constructor or create a new one you should create a POST request with next configurations ### 
 URL
