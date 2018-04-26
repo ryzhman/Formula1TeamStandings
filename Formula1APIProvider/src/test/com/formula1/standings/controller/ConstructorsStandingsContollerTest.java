@@ -3,6 +3,7 @@ package com.formula1.standings.controller;
 import com.formula1.standings.controller.ConstructorsStandingsController;
 import com.formula1.standings.service.ConstructorsStandingServiceImpl;
 import com.formula1.standings.utils.RedisConstants;
+import com.formula1.standings.wrapper.ObjectWrapper;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -40,7 +41,7 @@ public class ConstructorsStandingsContollerTest {
     public void getConstructorsStandingTest() throws Exception {
         JSONObject json = new JSONObject();
         json.put("test key", "test value");
-        when(mockService.getStandings(RedisConstants.CONSTRUCTORS)).thenReturn(json);
+        when(mockService.getStandings(RedisConstants.CONSTRUCTORS)).thenReturn(new ObjectWrapper(json.toString()));
 
         mockMvc.perform(get("/constructors/standings"))
                 .andExpect(status().isOk())

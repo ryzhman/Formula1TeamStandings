@@ -2,7 +2,7 @@ package com.formula1.standings.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.formula1.standings.dataConverters.ConstructorConverter;
+import com.formula1.standings.converter.ConstructorConverter;
 import com.formula1.standings.entity.Constructor;
 import com.formula1.standings.repository.ConstructorRepository;
 import com.formula1.standings.utils.DataValidator;

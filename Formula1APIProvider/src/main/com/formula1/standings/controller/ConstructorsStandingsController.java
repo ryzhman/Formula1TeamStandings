@@ -2,7 +2,7 @@ package com.formula1.standings.controller;
 
 import com.formula1.standings.service.ConstructorsStandingServiceImpl;
 import com.formula1.standings.utils.RedisConstants;
-import org.json.JSONObject;
+import com.formula1.standings.wrapper.ObjectWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ public class ConstructorsStandingsController {
     @RequestMapping(method = RequestMethod.GET, value = "/standings")
     public ResponseEntity getConstructorsStanding() {
         try {
-            JSONObject result = constructorStandingService.getStandings(RedisConstants.CONSTRUCTORS);
+            ObjectWrapper result = constructorStandingService.getStandings(RedisConstants.CONSTRUCTORS);
             return new ResponseEntity(result, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity("Unexpected error occured while getting standing data: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

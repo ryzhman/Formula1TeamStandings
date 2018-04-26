@@ -1,6 +1,6 @@
 package com.formula1.standings.repository;
 
-import com.formula1.standings.dataConverters.ConstructorConverter;
+import com.formula1.standings.converter.ConstructorConverter;
 import com.formula1.standings.entity.Constructor;
 import com.formula1.standings.utils.RedisConstants;
 import org.springframework.beans.factory.annotation.Autowired;

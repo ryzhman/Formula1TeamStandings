@@ -1,11 +1,10 @@
-package com.formula1.standings.dataConverters;
+package com.formula1.standings.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.formula1.standings.entity.Constructor;
 import com.formula1.standings.utils.DataValidator;
 import org.json.JSONArray;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.formula1.standings.dataConverters;
+package com.formula1.standings.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

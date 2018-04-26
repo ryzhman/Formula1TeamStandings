@@ -2,7 +2,7 @@ package com.formula1.standings.controller;
 
 import com.formula1.standings.service.DriversStandingsServiceImpl;
 import com.formula1.standings.utils.RedisConstants;
-import org.json.JSONObject;
+import com.formula1.standings.wrapper.ObjectWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +20,11 @@ public class DriversStandingsController {
 
     /**
      * Method returns the current list of F1 drivers standings
-     * */
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/standings")
     public ResponseEntity getStandings() {
         try {
-            JSONObject result = driversStandingsServiceImpl.getStandings(RedisConstants.DRIVERS);
+            ObjectWrapper result = driversStandingsServiceImpl.getStandings(RedisConstants.DRIVERS);
             return ResponseEntity.ok()
                     .body(result);
         } catch (Exception e) {
@@ -37,7 +37,7 @@ public class DriversStandingsController {
      * Data to update must be included in request body.
      * The passed JSON *MUST* include next properties: nationality, teamTitle.
      * Additional data for wins and points may be included.
-     * */
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/driver/{driverName}")
     public ResponseEntity updateDriverStanding(@PathVariable("driverName") String driverName, @RequestBody String driverData) {
         try {
@@ -53,7 +53,7 @@ public class DriversStandingsController {
      * Data to update must be included in request body.
      * The passed JSON *MUST* include next properties: nationality, teamTitle.
      * Additional data for wins and points may be included.
-     * */
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/driver")
     public ResponseEntity updateDriverStanding(@RequestBody String driverData) {
         try {

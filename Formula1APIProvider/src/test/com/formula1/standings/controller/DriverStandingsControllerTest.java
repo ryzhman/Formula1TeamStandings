@@ -1,9 +1,8 @@
 package com.formula1.standings.controller;
 
-import com.formula1.standings.controller.DriversStandingsController;
 import com.formula1.standings.service.DriversStandingsServiceImpl;
 import com.formula1.standings.utils.RedisConstants;
-import org.json.JSONObject;
+import com.formula1.standings.wrapper.ObjectWrapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -36,7 +35,7 @@ public class DriverStandingsControllerTest {
 
     @Test
     public void getConstructorsStandingTest() throws Exception {
-        when(mockService.getStandings(RedisConstants.DRIVERS)).thenReturn(new JSONObject("\"test key\":\"test value\""));
+        when(mockService.getStandings(RedisConstants.DRIVERS)).thenReturn(new ObjectWrapper("\"test key\":\"test value\""));
 
         mockMvc.perform(get("/drivers/standings"))
                 .andExpect(status().isOk())

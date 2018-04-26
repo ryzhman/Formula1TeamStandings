@@ -1,14 +1,12 @@
 package com.formula1.standings.repository;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.formula1.standings.dataConverters.DriverConverter;
+import com.formula1.standings.converter.DriverConverter;
 import com.formula1.standings.entity.Driver;
 import com.formula1.standings.utils.RedisConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.security.PermitAll;
 import java.io.IOException;
 
 /**
