@@ -13,7 +13,6 @@
     <packaging>pom</packaging>
 
     <name>Formula1Standings</name>
-    <description></description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -70,15 +69,6 @@
             <version>3.7</version>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
 
 </project>
