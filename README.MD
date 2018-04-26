@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/ryzhman/Formula1TeamStandings.svg?branch=master)](https://travis-ci.org/ryzhman/Formula1TeamStandings)
 
 ## Run application ##
-To run a REST service you should start Redis server locally. You can download it from official Redis webpage ([Linux](https://redis.io/download) | [Windows](https://github.com/MSOpenTech/redis/releases))
+To run REST service you need to launch main class. Redis server goes with the code, so you don't need to install in manually. 
 
 ## Samples of requests ##
 ### To add new data for a particular constructor or create a new one you should create a POST request with next configurations ### 
