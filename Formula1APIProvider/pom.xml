@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>providerAPI</artifactId>
+    <packaging>jar</packaging>
 
     <build>
         <plugins>
@@ -19,4 +20,16 @@
             </plugin>
         </plugins>
     </build>
+    <dependencies>
+        <dependency>
+            <groupId>com.formula1</groupId>
+            <artifactId>business-model</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.formula1</groupId>
+            <artifactId>dataFetcher</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 </project>
