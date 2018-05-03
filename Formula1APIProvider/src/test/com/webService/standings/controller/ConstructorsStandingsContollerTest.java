@@ -7,15 +7,22 @@ import com.webService.standings.wrapper.ObjectWrapper;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.util.NestedServletException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -31,6 +38,8 @@ public class ConstructorsStandingsContollerTest {
     private ConstructorsStandingService mockService;
     @InjectMocks
     private ConstructorsStandingsController controller;
+    @Rule
+    public ExpectedException thrownException = ExpectedException.none();
 
     @Before
     public void setup() {
@@ -38,28 +47,32 @@ public class ConstructorsStandingsContollerTest {
         this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
-//    @Ignore
-//    @Test
-//    public void getConstructorsStandingTest() throws Exception {
-//        JSONObject json = new JSONObject();
-//        json.put("test key", "test value");
-//        when(mockService.getStandings()).thenReturn(new ObjectWrapper(json.toString()).toString());
-//
-//        mockMvc.perform(get("/constructors/standings"))
-//                .andExpect(status().isOk())
-//                .andExpect(content().json("{\"test key\":\"test value\"}"));
-//
-//        verify(mockService, times(1)).getStandings(RedisConstants.CONSTRUCTORS);
-//    }
-//
-//    @Test
-//    public void getConstructorsStandingFailTest() throws Exception {
-//        when(mockService.getStandings(RedisConstants.CONSTRUCTORS)).thenThrow(new RuntimeException("Method invocation failed"));
-//        mockMvc.perform(get("/constructors/standings"))
-//                .andExpect(status().isInternalServerError())
-//                .andExpect(content().string("Unexpected error occured while getting standing data: Method invocation failed"));
-//        verify(mockService, times(1)).getStandings(RedisConstants.CONSTRUCTORS);
-//    }
+    @Test
+    public void getConstructorsStandingTest() throws Exception {
+        Constructor c1 = new Constructor("Ferrari test");
+        c1.setPoints(10);
+        Constructor c2 = new Constructor("Redbull test");
+        c2.setPoints(22);
+        List<Constructor> mockedResult = Arrays.asList(c1,c2);
+
+        when(mockService.getAllStandings()).thenReturn(mockedResult);
+
+        mockMvc.perform(get("/constructors/standings"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[{\"points\":10,\"title\":\"Ferrari test\"},{\"points\":22,\"title\":\"Redbull test\"}]"));
+
+        verify(mockService, times(1)).getAllStandings();
+    }
+
+    @Test
+    public void getConstructorsStandingFailTest() throws Exception {
+        thrownException.expect(NestedServletException.class);
+        thrownException.expectMessage(equalTo("Request processing failed; nested exception is java.lang.RuntimeException: Method invocation failed"));
+
+        when(mockService.getAllStandings()).thenThrow(new RuntimeException("Method invocation failed"));
+        mockMvc.perform(get("/constructors/standings"));
+        verify(mockService, times(1)).getAllStandings();
+    }
 
     @Test
     public void updateConstructorsStandingsTest() throws Exception {
@@ -82,32 +95,22 @@ public class ConstructorsStandingsContollerTest {
 
     @Test
     public void updateConstructorsStandingsExceptionTest() throws Exception {
-        doThrow(new RuntimeException()).when(mockService).updateStandingsWithData("testConstructor", "\"test key\":\"test value\"");
-        mockMvc.perform(post("/constructors/constructor/testConstructor")
-                .content("\"test key\":\"test value\""))
-                .andExpect(status().isInternalServerError());
+        thrownException.expect(NestedServletException.class);
+        thrownException.expectMessage(equalTo("Request processing failed; nested exception is java.lang.RuntimeException"));
 
-        verify(mockService, times(1)).updateStandingsWithData("testConstructor", "\"test key\":\"test value\"");
+        doThrow(new RuntimeException()).when(mockService).updateStandingsWithData("testFerrari", "\"test key\":\"test value\"");
+        mockMvc.perform(post("/constructors/constructor/{title}", "testFerrari")
+                .content("\"test key\":\"test value\""));
+
+        verify(mockService, times(1)).updateStandingsWithData("testFerrari", "\"test key\":\"test value\"");
     }
 
     @Test
     public void uploadConstructorsStandingsTest() throws Exception {
-        mockMvc.perform(post("/constructors/constructor")
-                .content("{'test key':'test value'}"))
+        mockMvc.perform(post("/constructors/constructor/{title}", "Ferrari")
+                .content("{\"title\":\"test value\"}"))
                 .andExpect(status().isOk());
 
-        verify(mockService, times(1)).updateStandingsWithData(Arrays.asList(new Constructor("test value")));
-    }
-
-    @Test
-    public void uploadConstructorsStandingsExceptionTest() throws Exception {
-        doThrow(new RuntimeException("test exception")).when(mockService).updateStandingsWithData(Arrays.asList(new Constructor("test value")));
-
-        mockMvc.perform(post("/constructors/constructor")
-                .content("\"test key\":\"test value\""))
-                .andExpect(status().isInternalServerError())
-                .andExpect(content().string("Update of standing wasn't possible: test exception"));
-
-        verify(mockService, times(1)).updateStandingsWithData(Arrays.asList(new Constructor("test value")));
+        verify(mockService, times(1)).updateStandingsWithData("Ferrari", "{\"title\":\"test value\"}");
     }
 }

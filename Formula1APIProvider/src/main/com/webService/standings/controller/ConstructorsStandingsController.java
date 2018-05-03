@@ -47,7 +47,7 @@ public class ConstructorsStandingsController {
      * Data to update must be included in request body.
      * The passed JSON may include next property: points
      */
-    @RequestMapping(method = RequestMethod.POST, value = "/constructor")
+    @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity uploadConstructorsStandings(@RequestBody String constructorsData) throws IOException {
         List<Constructor> constructors = ConstructorConverter.convertToEntities(constructorsData);
         constructorStandingService.updateStandingsWithData(constructors);
