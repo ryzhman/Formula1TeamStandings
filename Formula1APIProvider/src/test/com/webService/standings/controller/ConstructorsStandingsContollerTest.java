@@ -2,11 +2,7 @@ package com.webService.standings.controller;
 
 import com.businessModel.model.Constructor;
 import com.businessModel.service.ConstructorsStandingService;
-import com.businessModel.utils.RedisConstants;
-import com.webService.standings.wrapper.ObjectWrapper;
-import org.json.JSONObject;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -17,9 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.util.NestedServletException;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -37,7 +31,7 @@ public class ConstructorsStandingsContollerTest {
     @Mock
     private ConstructorsStandingService mockService;
     @InjectMocks
-    private ConstructorsStandingsController controller;
+    private com.webService.standings.controller.ConstructorsStandingsController controller;
     @Rule
     public ExpectedException thrownException = ExpectedException.none();
 
@@ -53,7 +47,7 @@ public class ConstructorsStandingsContollerTest {
         c1.setPoints(10);
         Constructor c2 = new Constructor("Redbull test");
         c2.setPoints(22);
-        List<Constructor> mockedResult = Arrays.asList(c1,c2);
+        List<Constructor> mockedResult = Arrays.asList(c1, c2);
 
         when(mockService.getAllStandings()).thenReturn(mockedResult);
 

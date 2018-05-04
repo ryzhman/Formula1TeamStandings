@@ -14,7 +14,7 @@ import java.nio.file.Paths;
  */
 @Component
 public class RedisRunner {
-    private final Path pathToServer = Paths.get("Redis server\\redis-server.exe");
+    private final Path pathToServer = Paths.get("..\\Redis server\\redis-server.exe");
     private Process redisServerProcess = null;
 
     @PostConstruct

@@ -1,10 +1,12 @@
 package com.businessModel.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
  * Created by Oleksandr Ryzhkov on 25.03.2017.
  */
+@JsonPropertyOrder({"title", "points"})
 public class Constructor extends Contestant {
     @JsonProperty
     private String title;
@@ -27,8 +29,7 @@ public class Constructor extends Contestant {
 
     @Override
     public String toString() {
-        return "id='" + id +
-                ", title='" + title +
+        return "Title='" + title +
                 ", points=" + points;
     }
 }
