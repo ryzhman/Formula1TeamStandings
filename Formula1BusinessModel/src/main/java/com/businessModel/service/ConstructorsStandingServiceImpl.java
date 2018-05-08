@@ -1,12 +1,15 @@
 package com.businessModel.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.businessModel.converter.RawDataConverter;
 import com.businessModel.model.Constructor;
 import com.businessModel.repository.ConstructorRepository;
+import com.businessModel.repository.DriverRepositoryImpl;
 import com.businessModel.utils.DataValidator;
 import com.businessModel.utils.RedisConstants;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -22,6 +25,7 @@ import java.util.Set;
  */
 @Service
 public class ConstructorsStandingServiceImpl implements ConstructorsStandingService {
+    private final Logger logger = LoggerFactory.getLogger(ConstructorsStandingServiceImpl.class);
     @Autowired
     private StringRedisTemplate redisTemplate;
     @Autowired
@@ -41,20 +45,24 @@ public class ConstructorsStandingServiceImpl implements ConstructorsStandingServ
      * Initially, whether constructor already exists is conducted. If yes entity is updated, otherwise - persisted from scratch.
      */
     @Override
-    public void updateStandingsWithData(String constructorId, String constructorsData) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode json = mapper.readTree(constructorsData);
+    public void updateStandingsWithData(String constructorId, String constructorsData) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode json = mapper.readTree(constructorsData);
 
-        DataValidator.validateConstructorData(json);
+            DataValidator.validateConstructorData(json);
 
-        Constructor entity = getByTitle(constructorId);
-        if (entity != null) {
-            entity.setPoints(Integer.parseInt(json.get("points").toString()));
-            constructorRepository.saveOrUpdate(entity);
-        } else {
-            entity = new Constructor(constructorId);
-            entity.setPoints(Integer.parseInt(json.get("points").toString()));
-            constructorRepository.saveOrUpdate(entity);
+            Constructor entity = getByTitle(constructorId);
+            if (entity != null) {
+                entity.setPoints(Integer.parseInt(json.get("points").toString()));
+                constructorRepository.saveOrUpdate(entity);
+            } else {
+                entity = new Constructor(constructorId);
+                entity.setPoints(Integer.parseInt(json.get("points").toString()));
+                constructorRepository.saveOrUpdate(entity);
+            }
+        } catch (Exception e) {
+            logger.error("Exception during updating constructor: " + constructorId + " with data: " + constructorsData, e);
         }
     }
 

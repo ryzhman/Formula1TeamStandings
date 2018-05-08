@@ -15,7 +15,7 @@ import java.util.List;
 public class ConstructorConverter {
     protected static ObjectMapper mapper = new ObjectMapper();
 
-    public static List<Constructor> convertToEntities(String constructorsData) throws IOException {
+    public static List<Constructor> convertToEntities(String constructorsData) throws Exception {
         JSONArray json = new JSONArray(constructorsData);
 
         DataValidator.validateConstructorsData(json);
