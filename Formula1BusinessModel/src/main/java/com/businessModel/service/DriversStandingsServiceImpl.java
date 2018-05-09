@@ -1,13 +1,13 @@
 package com.businessModel.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.businessModel.converter.RawDataConverter;
 import com.businessModel.model.Constructor;
 import com.businessModel.model.Driver;
 import com.businessModel.repository.DriverRepository;
 import com.businessModel.utils.DataValidator;
 import com.businessModel.utils.RedisConstants;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.json.JSONArray;
 import org.slf4j.Logger;
@@ -60,7 +60,7 @@ public class DriversStandingsServiceImpl implements DriversStandingsService {
             Driver entity = getByName(driverName);
             if (entity != null) {
                 entity.setNationality(json.get("nationality").toString());
-                entity.setPoints(Integer.parseInt(json.get("points").toString()));
+                entity.setPoints(Short.parseShort(json.get("points").toString()));
                 Constructor team = constructorsStandingService.getByTitle(json.get("teamTitle").toString());
                 if (team == null) {
                     throw new RuntimeException("Cannot store data for driver with a team title: '" + json.get("teamTitle").toString() + "'");
@@ -74,7 +74,7 @@ public class DriversStandingsServiceImpl implements DriversStandingsService {
                     throw new RuntimeException("Cannot store data for driver with a team title: '" + json.get("teamTitle").toString() + "'");
                 }
                 entity = new Driver(driverName, json.get("nationality").toString(), team);
-                entity.setPoints(Integer.parseInt(json.get("points").toString()));
+                entity.setPoints(Short.parseShort(json.get("points").toString()));
                 entity.setWins(Integer.parseInt(json.get("wins").toString()));
                 driverRepository.saveOrUpdate(entity);
             }

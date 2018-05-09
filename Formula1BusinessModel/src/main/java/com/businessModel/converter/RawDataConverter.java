@@ -4,7 +4,11 @@ import com.businessModel.model.Constructor;
 import com.businessModel.model.Driver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -13,30 +17,32 @@ import java.util.stream.Collectors;
 public class RawDataConverter {
     protected static ObjectMapper mapper = new ObjectMapper();
 
-    public static List<Driver> convertToDrivers(List<Object> rawData) {
+    public static Collection<Driver> convertToDrivers(List<Object> rawData) {
+        final Supplier<TreeSet<Driver>> supplier =
+                () -> new TreeSet<>(Comparator.comparingInt(Driver::getPosition));
         return rawData.stream()
                 .map(rawObject -> {
                     try {
-                        Driver result = mapper.readValue((String)rawObject, Driver.class);
-                        return result;
+                        return mapper.readValue((String) rawObject, Driver.class);
                     } catch (Exception e) {
                         throw new RuntimeException("Cannot fetch data from the DB");
                     }
                 })
-                .collect(Collectors.toList());
+                .collect(Collectors.toCollection(supplier));
     }
 
-    public static List<Constructor> convertToConstructors(List<Object> rawData) {
+    public static Collection<Constructor> convertToConstructors(List<Object> rawData) {
+        final Supplier<TreeSet<Constructor>> supplier =
+                () -> new TreeSet<>(Comparator.comparingInt(Constructor::getPosition));
         return rawData.stream()
                 .map(rawObject -> {
                     try {
-                        Constructor result = mapper.readValue((String)rawObject, Constructor.class);
-                        return result;
+                        return mapper.readValue((String) rawObject, Constructor.class);
                     } catch (Exception e) {
                         throw new RuntimeException("Cannot fetch data from the DB");
                     }
                 })
-                .collect(Collectors.toList());
+                .collect(Collectors.toCollection(supplier));
     }
 
 

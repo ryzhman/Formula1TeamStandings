@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -31,8 +32,8 @@ public class ConstructorsStandingsController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/standings")
     public ResponseEntity getConstructorsStanding(HttpServletRequest request) {
-        List<Constructor> result = constructorStandingService.getAllStandings();
-        logger.info("Constructor standing request was made, " + request.getRemoteUser() + ", " + request.getRemoteAddr());
+        Collection<Constructor> result = constructorStandingService.getAllStandings();
+        logger.info("Constructor standing request was made, " + request.getHeader("User-Agent") + ", " + request.getRemoteAddr());
         return new ResponseEntity(result, HttpStatus.OK);
     }
 

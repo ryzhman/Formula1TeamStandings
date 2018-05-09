@@ -3,6 +3,7 @@ package com.businessModel.service;
 import com.businessModel.model.Constructor;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -17,5 +18,5 @@ public interface ConstructorsStandingService {
 
     void updateStandingsWithData(List<Constructor> constructorList);
 
-    List<Constructor> getAllStandings();
+    Collection<Constructor> getAllStandings();
 }

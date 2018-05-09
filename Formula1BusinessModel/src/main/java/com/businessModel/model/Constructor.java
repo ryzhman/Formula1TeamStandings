@@ -6,13 +6,13 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Created by Oleksandr Ryzhkov on 25.03.2017.
  */
-@JsonPropertyOrder({"title", "points"})
+@JsonPropertyOrder({"position", "title", "points"})
 public class Constructor extends Contestant {
     @JsonProperty
     private String title;
 
     public Constructor(String title) {
-        setPoints(0);
+        setPoints((short)0);
         this.title = title;
     }
 

@@ -3,7 +3,6 @@ package com.businessModel.service;
 import com.businessModel.converter.RawDataConverter;
 import com.businessModel.model.Constructor;
 import com.businessModel.repository.ConstructorRepository;
-import com.businessModel.repository.DriverRepositoryImpl;
 import com.businessModel.utils.DataValidator;
 import com.businessModel.utils.RedisConstants;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -16,6 +15,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -54,11 +54,11 @@ public class ConstructorsStandingServiceImpl implements ConstructorsStandingServ
 
             Constructor entity = getByTitle(constructorId);
             if (entity != null) {
-                entity.setPoints(Integer.parseInt(json.get("points").toString()));
+                entity.setPoints(Short.parseShort(json.get("points").toString()));
                 constructorRepository.saveOrUpdate(entity);
             } else {
                 entity = new Constructor(constructorId);
-                entity.setPoints(Integer.parseInt(json.get("points").toString()));
+                entity.setPoints(Short.parseShort(json.get("points").toString()));
                 constructorRepository.saveOrUpdate(entity);
             }
         } catch (Exception e) {
@@ -84,7 +84,7 @@ public class ConstructorsStandingServiceImpl implements ConstructorsStandingServ
     }
 
     @Override
-    public List<Constructor> getAllStandings() {
+    public Collection<Constructor> getAllStandings() {
         Set<String> allKeys = redisTemplate.keys(RedisConstants.STANDINGS + RedisConstants.REDIS_SEPARATOR + RedisConstants.CONSTRUCTORS + RedisConstants.REDIS_SEPARATOR + "*");
         List<Object> fetchedData = redisTemplate.executePipelined((RedisCallback<?>) connection -> {
             Iterator iter = allKeys.iterator();

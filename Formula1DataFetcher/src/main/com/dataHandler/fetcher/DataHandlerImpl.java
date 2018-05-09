@@ -1,6 +1,7 @@
 package dataHandler.fetcher;
 
 import com.businessModel.model.Constructor;
+import com.businessModel.model.Contestant;
 import com.businessModel.model.Driver;
 import com.businessModel.service.ConstructorsStandingService;
 import com.businessModel.service.DriversStandingsService;
@@ -19,11 +20,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Oleksandr Ryzhkov on 18.04.2018.
@@ -33,8 +30,8 @@ import java.util.List;
 public class DataHandlerImpl implements DataHandler {
     private final Logger logger = LoggerFactory.getLogger(DataHandlerImpl.class);
 
-    private List<Driver> driversData;
-    private List<Constructor> constructorsData;
+    private Collection<Driver> driversData;
+    private Collection<Constructor> constructorsData;
 
     @Value("${standing.drivers}")
     private String driversStandingDataServer;
@@ -63,7 +60,6 @@ public class DataHandlerImpl implements DataHandler {
         if (CollectionUtils.isNotEmpty(constructorsData)) {
             constructorsData.forEach(constructor -> constructorStandingService.update(constructor));
         }
-
         if (CollectionUtils.isNotEmpty(driversData)) {
             driversData.forEach(driver -> {
                 try {
@@ -75,36 +71,36 @@ public class DataHandlerImpl implements DataHandler {
         }
     }
 
-    private List<Constructor> fetchConstructorData() {
+    private Collection<Constructor> fetchConstructorData() {
         try {
-            List<Constructor> result = new ArrayList<>();
+            Set<Constructor> result = new TreeSet<>(Comparator.comparingInt(Contestant::getPosition));
             String dataFromServer = RequestUtils.getDataFromServer(constructorsStandingDataServer);
             Document doc = Jsoup.parse(dataFromServer, "UTF-8");
             Elements standingDiv = doc.getElementById("constructor-standing").getElementsByClass("gel-long-primer");
             //there are two elements in this collection
             if (CollectionUtils.isNotEmpty(standingDiv) && standingDiv.size() == 2) {
-                Elements tableData = standingDiv.get(0).getElementsByTag("td");
+                Elements tableData = standingDiv.get(0).getElementsByTag("tr");
+                tableData.removeIf(item -> " ".equals(item.text()));
                 Iterator<Element> iterator = tableData.iterator();
                 while (iterator.hasNext()) {
-                    Constructor c = new Constructor(iterator.next().text());
-                    if (!iterator.hasNext()) {
-                        throw new RuntimeException("Data from the 3rd party server cannot be parsed");
-                    }
-                    c.setPoints(Integer.parseInt(iterator.next().text()));
+                    Element current = iterator.next();
+                    Constructor c = new Constructor(current.getElementsByTag("td").first().text());
+                    c.setPoints(Byte.parseByte(current.getElementsByTag("td").last().text()));
+                    c.setPosition(Byte.parseByte(current.getElementsByTag("th").text()));
                     result.add(c);
                 }
             }
             return result;
         } catch (Exception e) {
             logger.error("Couldn't fetch data for constructors from server: " + constructorsStandingDataServer, e);
-            return Collections.emptyList();
+            return Collections.emptySet();
         }
     }
 
-    private List<Driver> fetchDriverData() {
+    private Collection<Driver> fetchDriverData() {
         try {
             String dataFromServer = RequestUtils.getDataFromServer(driversStandingDataServer);
-            List<Driver> result = new ArrayList<>();
+            Set<Driver> result = new TreeSet<>(Comparator.comparingInt(Driver::getPosition));
             Document doc = Jsoup.parse(dataFromServer, "UTF-8");
             Elements standingDiv = doc.getElementById("driver-standing").getElementsByClass("gel-long-primer");
             //there are two elements in this collection
@@ -128,14 +124,14 @@ public class DataHandlerImpl implements DataHandler {
                     c.setTeam(constructor);
 
                     c.setWins(Integer.parseInt(tData.get(1).text()));
-                    c.setPoints(Integer.parseInt(tData.get(2).text()));
+                    c.setPoints(Short.parseShort(tData.get(2).text()));
                     result.add(c);
                 }
             }
             return result;
         } catch (Exception e) {
             logger.error("Couldn't fetch data for drivers from server: " + driversStandingDataServer, e);
-            return Collections.emptyList();
+            return Collections.emptySet();
         }
     }
 

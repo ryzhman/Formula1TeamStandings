@@ -1,7 +1,7 @@
 package com.businessModel.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.businessModel.utils.CountryUtil;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
@@ -17,11 +17,9 @@ public class Driver extends Contestant {
     private int wins;
     @JsonProperty
     private Constructor team;
-    @JsonProperty
-    private byte position;
 
     public Driver(String name, String nationality, Constructor team) {
-        setPoints(0);
+        setPoints((short) 0);
         this.name = name;
         this.nationality = CountryUtil.getCountry(nationality);
         this.team = team;
@@ -56,11 +54,11 @@ public class Driver extends Contestant {
         this.wins = wins;
     }
 
-    public int getPoints() {
+    public short getPoints() {
         return points;
     }
 
-    public void setPoints(int points) {
+    public void setPoints(short points) {
         this.points = points;
     }
 

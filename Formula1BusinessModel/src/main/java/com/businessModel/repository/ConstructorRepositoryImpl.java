@@ -27,13 +27,12 @@ public class ConstructorRepositoryImpl implements ConstructorRepository {
             Constructor entity = getConstructorByTitle(constructor.getTitle());
             if (entity != null) {
                 entity.setPoints(constructor.getPoints());
+                entity.setPosition(constructor.getPosition());
                 redisTemplate.opsForValue().set(RedisConstants.STANDINGS + RedisConstants.REDIS_SEPARATOR + RedisConstants.CONSTRUCTORS + RedisConstants.REDIS_SEPARATOR + entity.getTitle(),
                         mapper.writeValueAsString(entity));
             } else {
-                entity = new Constructor(constructor.getTitle());
-                entity.setPoints(constructor.getPoints());
                 redisTemplate.opsForValue().set(RedisConstants.STANDINGS + RedisConstants.REDIS_SEPARATOR + RedisConstants.CONSTRUCTORS + RedisConstants.REDIS_SEPARATOR + entity.getTitle(),
-                        mapper.writeValueAsString(entity));
+                        mapper.writeValueAsString(constructor));
             }
         } catch (IOException e) {
             logger.error("Exception during saving or updating the constructor: " + constructor.toString(), e);

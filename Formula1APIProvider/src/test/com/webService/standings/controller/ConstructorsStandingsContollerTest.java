@@ -44,9 +44,9 @@ public class ConstructorsStandingsContollerTest {
     @Test
     public void getConstructorsStandingTest() throws Exception {
         Constructor c1 = new Constructor("Ferrari test");
-        c1.setPoints(10);
+        c1.setPoints((short)10);
         Constructor c2 = new Constructor("Redbull test");
-        c2.setPoints(22);
+        c2.setPoints((short)22);
         List<Constructor> mockedResult = Arrays.asList(c1, c2);
 
         when(mockService.getAllStandings()).thenReturn(mockedResult);
