@@ -1,4 +1,4 @@
-package dataHandler.fetcher;
+package dataHandler.processor;
 
 import com.businessModel.model.Constructor;
 import com.businessModel.model.Contestant;
@@ -27,8 +27,8 @@ import java.util.*;
  */
 @Service
 @PropertySource("classpath:application.properties")
-public class DataHandlerImpl implements DataHandler {
-    private final Logger logger = LoggerFactory.getLogger(DataHandlerImpl.class);
+public class DataFetcherImpl implements DataFetcher {
+    private final Logger logger = LoggerFactory.getLogger(DataFetcherImpl.class);
 
     private Collection<Driver> driversData;
     private Collection<Constructor> constructorsData;
@@ -45,18 +45,21 @@ public class DataHandlerImpl implements DataHandler {
 
     @PostConstruct
     public void initDbWithDataFromServer() {
+        populateServiceWithStandings();
+    }
+
+    @Override
+    public void populateServiceWithStandings() {
         fetchDataFromServer();
         handleData();
     }
 
-    @Override
-    public void fetchDataFromServer() {
+    private void fetchDataFromServer() {
         constructorsData = fetchConstructorData();
         driversData = fetchDriverData();
     }
 
-    @Override
-    public void handleData() {
+    private void handleData() {
         if (CollectionUtils.isNotEmpty(constructorsData)) {
             constructorsData.forEach(constructor -> constructorStandingService.update(constructor));
         }

@@ -19,4 +19,6 @@ public interface ConstructorsStandingService {
     void updateStandingsWithData(List<Constructor> constructorList);
 
     Collection<Constructor> getAllStandings();
+
+    void removeAllStandings();
 }

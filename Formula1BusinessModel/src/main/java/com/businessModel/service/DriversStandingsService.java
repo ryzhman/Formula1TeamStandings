@@ -18,4 +18,6 @@ public interface DriversStandingsService {
     void update(Driver driver) throws Exception;
 
     Collection<Driver> getAllStandings();
+
+    void removeAllStandings();
 }

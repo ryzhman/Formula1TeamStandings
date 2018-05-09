@@ -131,14 +131,11 @@ public class DriversStandingsServiceImpl implements DriversStandingsService {
 
     @Override
     public Collection<Driver> getAllStandings() {
-        Set<String> allKeys = redisTemplate.keys(RedisConstants.STANDINGS + RedisConstants.REDIS_SEPARATOR + RedisConstants.DRIVERS + RedisConstants.REDIS_SEPARATOR + "*");
-        List<Object> fetchedData = redisTemplate.executePipelined((RedisCallback<?>) connection -> {
-            Iterator iter = allKeys.iterator();
-            while (iter.hasNext()) {
-                connection.get(((String) iter.next()).getBytes());
-            }
-            return null;
-        });
-        return RawDataConverter.convertToDrivers(fetchedData);
+        return driverRepository.getStandings();
+    }
+
+    @Override
+    public void removeAllStandings() {
+        constructorsStandingService.removeAllStandings();
     }
 }
